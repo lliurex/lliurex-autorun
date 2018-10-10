@@ -1,0 +1,35 @@
+lliurex-autorun (0.8) xenial; urgency=medium
+
+  * First release to xenial
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 02 Mar 2016 13:45:59 +0100
+
+lliurex-autorun (0.5) trusty; urgency=medium
+
+  * First Trusty Version
+
+ -- Daniel Duran Vecino <daduve@gmail.com>  Wed, 14 Jan 2015 17:37:02 +0100
+
+lliurex-autorun (0.4) precise; urgency=low
+
+  * UNRELEASED
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 31 Jan 2014 10:07:56 +0100
+
+lliurex-autorun (0.3) precise; urgency=high
+
+  * First pandora release
+
+ -- Raul Rodrigo Segura <lliurex_devel3@edu.gva.es>  Tue, 22 May 2012 08:21:40 +0200
+
+lliurex-autorun (0.2) lucid; urgency=low
+
+  * Hidden entry on menu
+
+ -- Raul Rodrigo Segura <lliurex_devel3@edu.gva.es>  Tue, 22 May 2012 08:21:06 +0200
+
+lliurex-autorun (0.1) lucid; urgency=low
+
+  * Initial released
+
+ -- Raul Rodrigo Segura <lliurex_devel3@edu.gva.es>  Mon, 14 May 2012 13:48:10 +0200
