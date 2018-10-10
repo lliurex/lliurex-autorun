@@ -1,0 +1,108 @@
+#!/usr/bin/env perl
+use warnings;
+use Config::IniFiles;
+sub command_parser{
+        my $command_string = $_[0];
+        my $word = "";
+        my $token = 0;
+        my @lista = ();
+        my @array_command = split('',$command_string);
+        for($i = 0; $i <= $#array_command;$i++){
+                if($i == $#array_command and $array_command[$i] ne " "){
+                        $word .= $array_command[$i];
+                        push(@lista,$word);
+                }
+                elsif($array_command[$i] eq " "){
+                        if ( $token == 0){
+                                push(@lista,$word);
+                                $word = '';
+                        }
+                        else{
+                                $word .= " ";
+                        }
+                }
+                elsif($array_command[$i] eq '"'){
+                        $word .= $array_command[$i];
+                        if($token == 0){
+                                $token = 1;}
+                        else{
+                                $token = 0;
+                        }
+                }
+                else{
+                        $word .= $array_command[$i];
+                }
+        }
+        return \@lista;
+}
+=for
+$a = command_parser('esto es "bla bla" con otro "bli bli"');
+@auxiliar = @$a;
+foreach $x(@auxiliar){
+        print $x."\n";
+}
+=cut
+my $media_path = $ARGV[0];
+unless ($media_path =~ m/\/$/){
+	$media_path .= "/";}
+$media_path_pathched = $media_path;
+if ( $media_path =~ m/ / ){
+        $media_path_pathched = '"'.$media_path.'"';
+}
+if ( -e $media_path ){
+        opendir(D,$media_path);
+	my @directory_files = grep{ !/^.{1,2}$/} readdir(D);
+        closedir(D);
+	my %list_files = map { lc($media_path).lc($_) => $media_path.$_} @directory_files;
+	my $autorun_path = "";
+        $autorun_path = lc($media_path) . "autorun.inf";
+	if (exists($list_files{$autorun_path})){
+		my $cfg = Config::IniFiles->new( -file=>$list_files{$autorun_path}, -nocase=>1);
+		if ($cfg->exists("autorun","open")){
+			my $command = $cfg->val("autorun","open");
+                        $command =~ s/\\/\//g;
+                        $a = command_parser($command);
+                        my @command_parsed = @$a;
+                        for($i = 0; $i <= $#command_parsed ; $i++){
+                                if( $command_parsed[$i] =~ m/\// ){
+                                        $command_parsed[$i] = $media_path_pathched.$command_parsed[$i];
+                                }
+                                else{
+                                        $a = lc($media_path.$command_parsed[$i]);
+                                        if (exists($list_files{$a}))
+                                        {
+                                                $command_parsed[$i] = $media_path_pathched.$command_parsed[$i];
+                                        }
+                                        else{
+                                                my @list_extensions = ('exe','bat','com','EXE','BAT','COM','Exe','Com','Bat');
+                                                foreach $extension(@list_extensions){
+                                                        $file_with_extension = $command_parsed[$i].".$extension";
+                                                        $a = lc($media_path.$file_with_extension);
+                                                        if (exists($list_files{$a}))
+                                                        {
+                                                                $command_parsed[$i] = $media_path_pathched.$command_parsed[$i];
+                                                                last;
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+
+			if ( $command_parsed[$#command_parsed] =~ m/.*htm[l]{0,1}$|.*swf$/){
+                                system("xdg-open ".$command_parsed[$#command_parsed]." &");
+			}
+
+			else{
+                                print("wine ".join(" ",@command_parsed)." &");
+				system("wine ".join(" ",@command_parsed)." &");
+			}
+		}
+	}
+	$autorun_path = lc($media_path) . "autorun.exe";
+	if (exists($list_files{$autorun_path})){
+		system("wine ".$media_path_pathched.$list_files{$autorun_path}." &");
+	}
+}
+else{
+exit 1;
+}

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Lliurex-autorun
+TryExec=lliurex-autorun
+Exec=lliurex-autorun %u
+Icon=application-x-executable
+Terminal=false
+StartupNotify=true
+Type=Application
+MimeType=x-content/software;
+Name[qcv]=Lliurex-autorun
+Name[es]=Lliurex-autorun
+NoDisplay=true
